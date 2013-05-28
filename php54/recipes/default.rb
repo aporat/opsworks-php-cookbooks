@@ -38,14 +38,10 @@ case node[:platform]
   end
   
   # get the metadata
-  execute "yum -q makecache" do
-    action :nothing
-  end
+  execute "yum -q makecache"
   
   # manually install php 5.4....
-  execute "yum install -y  --skip-broken php54w php54w-devel php54w-cli php54w-snmp php54w-soap php54w-xml php54w-xmlrpc php54w-process php54w-mysql55 php54w-pecl-memcache php54w-pecl-apc php54w-pear php54w-pdo php54w-gd php54w-imap php54w-mbstring" do
-    action :nothing
-  end
+  execute "yum install -y  --skip-broken php54w php54w-devel php54w-cli php54w-snmp php54w-soap php54w-xml php54w-xmlrpc php54w-process php54w-mysql55 php54w-pecl-memcache php54w-pecl-apc php54w-pear php54w-pdo php54w-gd php54w-imap php54w-mbstring"  
   
   when "rhel", "fedora", "suse"
   # add the webtatic repository
