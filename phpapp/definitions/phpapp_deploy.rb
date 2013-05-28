@@ -20,27 +20,6 @@ define :phpapp_deploy do
       :ssh_key => deploy[:scm][:ssh_key]
     ) if deploy[:scm][:scm_type].to_s == 'git'
 
-    prepare_svn_checkouts(
-      :user => deploy[:user],
-      :group => deploy[:group],
-      :home => deploy[:home],
-      :deploy => deploy,
-      :application => application
-    ) if deploy[:scm][:scm_type].to_s == 'svn'
-
-    if deploy[:scm][:scm_type].to_s == 'archive'
-      repository = prepare_archive_checkouts(deploy[:scm])
-      deploy[:scm] = {
-        :scm_type => 'git',
-        :repository => repository
-      }
-    elsif deploy[:scm][:scm_type].to_s == 's3'
-      repository = prepare_s3_checkouts(deploy[:scm])
-      deploy[:scm] = {
-        :scm_type => 'git',
-        :repository => repository
-      }
-    end
   end
 
   Chef::Log.debug("Checking out source code of application #{application} with type #{deploy[:application_type]}")
@@ -80,13 +59,6 @@ define :phpapp_deploy do
         scm_provider :git
         enable_submodules deploy[:enable_submodules]
         shallow_clone deploy[:shallow_clone]
-      when 'svn'
-        scm_provider :subversion
-        svn_username deploy[:scm][:user]
-        svn_password deploy[:scm][:password]
-        svn_arguments "--no-auth-cache --non-interactive --trust-server-cert"
-        svn_info_args "--no-auth-cache --non-interactive --trust-server-cert"
-      else
         raise "unsupported SCM type #{deploy[:scm][:scm_type].inspect}"
       end
 
@@ -97,15 +69,5 @@ define :phpapp_deploy do
     block do
       ENV['HOME'] = "/root"
     end
-  end
-
-  template "/etc/logrotate.d/opsworks_app_#{application}" do
-    backup false
-    source "logrotate.erb"
-    cookbook 'deploy'
-    owner "root"
-    group "root"
-    mode 0644
-    variables( :log_dirs => ["#{deploy[:deploy_to]}/shared/log" ] )
   end
 end

@@ -1,11 +1,5 @@
 node[:deploy].each do |app_name, deploy|
 
-  phpapp_deploy_dir do
-    user deploy[:user]
-    group deploy[:group]
-    path deploy[:deploy_to]
-  end
-
   phpapp_deploy do
     deploy_data deploy
     app application
