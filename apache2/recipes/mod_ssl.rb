@@ -18,7 +18,7 @@
 #
 
 if platform?('centos','redhat','fedora','amazon')
-  package 'mod_ssl24' do
+  package 'mod24_ssl' do
     action :install
     notifies :run, resources(:execute => 'generate-module-list'), :immediately
   end
