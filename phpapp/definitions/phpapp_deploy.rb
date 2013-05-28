@@ -50,16 +50,11 @@ define :phpapp_deploy do
       symlink_before_migrate( deploy[:symlink_before_migrate] )
       action deploy[:action]
 
-      if deploy[:application_type] == 'rails'
-        restart_command "sleep #{deploy[:sleep_before_restart]} && #{node[:opsworks][:rails_stack][:restart_command]}"
-      end
-
       case deploy[:scm][:scm_type].to_s
       when 'git'
         scm_provider :git
         enable_submodules deploy[:enable_submodules]
         shallow_clone deploy[:shallow_clone]
-        raise "unsupported SCM type #{deploy[:scm][:scm_type].inspect}"
       end
 
     end
