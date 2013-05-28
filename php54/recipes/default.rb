@@ -32,10 +32,15 @@ case node['platform_family']
     key "RPM-GPG-KEY-webtatic-andy"
     action :add
   end
-
+  
   yum_key "RPM-GPG-KEY-webtatic-andy" do
     url "http://repo.webtatic.com/yum/RPM-GPG-KEY-webtatic-andy"
     action :add
+  end
+  
+  # get the metadata
+  execute "yum -q makecache" do
+    action :nothing
   end
   
   node.set['php']['packages'] = ['php54w', 'php54w-devel', 'php54w-cli', 'php54w-snmp', 'php54w-soap', 'php54w-xml', 'php54w-xmlrpc', 'php54w-process', 'php54w-mysql55', 'php54w-pecl-memcache', 'php54w-pecl-apc', 'php54w-pear', 'php54w-pdo', 'php54w-gd', 'php54w-imap', 'php54w-mbstring']
