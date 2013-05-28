@@ -23,7 +23,7 @@ case node[:platform]
   #node.set['mysql']['server']['packages'] = %w{mysql55-server}
   #node.set['mysql']['client']['packages'] = %w{mysql55}
   
-  when "rhel", "fedora", "suse"
+  when "rhel", "fedora", "suse", "amazon"
   # add the webtatic repository
   yum_repository "webtatic" do
     repo_name "webtatic"
