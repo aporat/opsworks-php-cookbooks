@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-case node['platform_family']
+case node[:platform]
 
   when "amazon"
   node.set['php']['packages'] = ['php54', 'php54-devel', 'php54-cli', 'php54-snmp', 'php54-soap', 'php54-xml', 'php54-xmlrpc', 'php54-process', 'php54-mysql', 'php54-pdo', 'php54-gd', 'php54-imap', 'php54-mbstring']
