@@ -1,4 +1,4 @@
-define :opsworks_deploy do
+define :phpapp_deploy do
   application = params[:app]
   deploy = params[:deploy_data]
 
