@@ -90,83 +90,12 @@ define :opsworks_deploy do
         raise "unsupported SCM type #{deploy[:scm][:scm_type].inspect}"
       end
 
-      before_migrate do
-        link_tempfiles_to_current_release
-
-        if deploy[:application_type] == 'rails'
-          if deploy[:auto_bundle_on_deploy]
-            OpsWorks::RailsConfiguration.bundle(application, node[:deploy][application], release_path)
-          end
-
-          node[:deploy][application][:database][:adapter] = OpsWorks::RailsConfiguration.determine_database_adapter(
-            application,
-            node[:deploy][application],
-            release_path,
-            :force => node[:force_database_adapter_detection],
-            :consult_gemfile => node[:deploy][application][:auto_bundle_on_deploy]
-          )
-          template "#{node[:deploy][application][:deploy_to]}/shared/config/database.yml" do
-            cookbook "rails"
-            source "database.yml.erb"
-            mode "0660"
-            owner node[:deploy][application][:user]
-            group node[:deploy][application][:group]
-            variables(
-              :database => node[:deploy][application][:database],
-              :environment => node[:deploy][application][:rails_env]
-            )
-          end.run_action(:create)
-        elsif deploy[:application_type] == 'php'
-          template "#{node[:deploy][application][:deploy_to]}/shared/config/opsworks.php" do
-            cookbook 'php'
-            source 'opsworks.php.erb'
-            mode '0660'
-            owner node[:deploy][application][:user]
-            group node[:deploy][application][:group]
-            variables(
-              :database => node[:deploy][application][:database],
-              :memcached => node[:deploy][application][:memcached],
-              :layers => node[:opsworks][:layers]
-            )
-            only_if do
-              File.exists?("#{node[:deploy][application][:deploy_to]}/shared/config")
-            end
-          end
-        elsif deploy[:application_type] == 'nodejs'
-          if deploy[:auto_npm_install_on_deploy]
-            OpsWorks::NodejsConfiguration.npm_install(application, node[:deploy][application], release_path)
-          end
-        end
-
-        # run user provided callback file
-        run_callback_from_file("#{release_path}/deploy/before_migrate.rb")
-      end
     end
   end
 
   ruby_block "change HOME back to /root after source checkout" do
     block do
       ENV['HOME'] = "/root"
-    end
-  end
-
-  if deploy[:application_type] == 'rails' && node[:opsworks][:instance][:layers].include?('rails-app')
-    case node[:opsworks][:rails_stack][:name]
-
-    when 'apache_passenger'
-      passenger_web_app do
-        application application
-        deploy deploy
-      end
-
-    when 'nginx_unicorn'
-      unicorn_web_app do
-        application application
-        deploy deploy
-      end
-
-    else
-      raise "Unsupport Rails stack"
     end
   end
 
