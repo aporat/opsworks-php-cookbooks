@@ -43,7 +43,7 @@ case node[:platform]
   end
   
   # manually install php 5.4....
-  execute "yum install -y php54w php54w-devel php54w-cli php54w-snmp php54w-soap php54w-xml php54w-xmlrpc php54w-process php54w-mysql55 php54w-pecl-memcache php54w-pecl-apc php54w-pear php54w-pdo php54w-gd php54w-imap php54w-mbstring" do
+  execute "yum install -y  --skip-broken php54w php54w-devel php54w-cli php54w-snmp php54w-soap php54w-xml php54w-xmlrpc php54w-process php54w-mysql55 php54w-pecl-memcache php54w-pecl-apc php54w-pear php54w-pdo php54w-gd php54w-imap php54w-mbstring" do
     action :nothing
   end
   
