@@ -6,7 +6,7 @@ node[:deploy].each do |app_name, deploy|
   # install composer
   script "install_composer" do
     interpreter "bash"
-    user "root"
+    user "#{node['phpapp']['deploy']['user']}"
     cwd "/var/#{app_name}"
     code <<-EOH
     curl -s https://getcomposer.org/installer | php
