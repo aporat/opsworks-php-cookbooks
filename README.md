@@ -9,7 +9,7 @@ Initial Setup
 2. Add a new `Other -> Custom` layer (DO NOT USE THE BUILT IN PHP LAYER)
 3. Edit the newly created layer, and add the custom recipes:
 
-** add php54::default, apache2::default, apache2::mod_rewrite to the setip lifetime event
-** add phpapp::configure in the configure lifetime event
-** add phpapp::deploy in the deploy lifetime event
+  * add php54::default, apache2::default, apache2::mod_rewrite to the setip lifetime event
+  * add phpapp::configure in the configure lifetime event
+  * add phpapp::deploy in the deploy lifetime event
 
