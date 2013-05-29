@@ -2,9 +2,9 @@ node[:deploy].each do |app_name, deploy|
 
   # use opsworks ssh key management and load the key into the ec2 instance
   prepare_git_checkouts(
-    :user => deploy[:user],
-    :group => deploy[:group],
-    :home => deploy[:home],
+    :user => "root",
+    :group => "root",
+    :home => "/root/",
     :ssh_key => deploy[:scm][:ssh_key]
   ) if deploy[:scm][:scm_type].to_s == 'git'
 
