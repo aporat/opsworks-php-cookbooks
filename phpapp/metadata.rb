@@ -1,4 +1,4 @@
-maintainer "Amazon Web Services"
-description "Deploy applications"
+maintainer "Adar Porat"
+description "Deploys PHP 5.4 git applications"
 version "0.1"
-recipe "deploy::php", "Deploy a PHP application"
+recipe "deploy::php", "Deploys a PHP application"
