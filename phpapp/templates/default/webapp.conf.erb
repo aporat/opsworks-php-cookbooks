@@ -1,7 +1,6 @@
 <VirtualHost *:80>
-    ServerName example.com
+    ServerName <%= node[:phpapp][:domain] %>
     DocumentRoot <%= @params[:docroot] %>
-    
     
     <Directory "<%= @params[:docroot] %>">
       Options Indexes FollowSymLinks MultiViews
