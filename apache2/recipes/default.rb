@@ -2,7 +2,7 @@
 # Cookbook Name:: apache2
 # Recipe:: default
 #
-# Copyright 2008, OpsCode, Inc.
+# Copyright 2008-2013, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,172 +18,195 @@
 #
 
 package 'apache2' do
-  case node[:platform]
-  when 'centos','redhat','fedora','amazon'
-    package_name 'httpd'
-  when 'debian','ubuntu'
-    package_name 'apache2'
-  end
-  action :install
+  package_name node['apache']['package']
 end
 
-include_recipe 'apache2::service'
-
 service 'apache2' do
-  service_name value_for_platform(
-    ['centos','redhat','fedora','amazon'] => {'default' => 'httpd'},
-    'default' => 'apache2'
-  )
+  case node['platform_family']
+  when 'rhel', 'fedora', 'suse'
+    service_name 'httpd'
+    # If restarted/reloaded too quickly httpd has a habit of failing.
+    # This may happen with multiple recipes notifying apache to restart - like
+    # during the initial bootstrap.
+    restart_command '/sbin/service httpd restart && sleep 1'
+    reload_command '/sbin/service httpd reload && sleep 1'
+  when 'debian'
+    service_name 'apache2'
+    restart_command '/usr/sbin/invoke-rc.d apache2 restart && sleep 1'
+    reload_command '/usr/sbin/invoke-rc.d apache2 reload && sleep 1'
+  when 'arch'
+    service_name 'httpd'
+  when 'freebsd'
+    service_name 'apache22'
+  end
+  supports [:restart, :reload, :status]
   action :enable
 end
 
-if platform?('centos', 'redhat', 'fedora', 'amazon')
-  directory node[:apache][:log_dir] do
-    mode 0755
-    action :create
+if platform_family?('rhel', 'fedora', 'arch', 'suse', 'freebsd')
+  directory node['apache']['log_dir'] do
+    mode '0755'
   end
 
-  remote_file '/usr/local/bin/apache2_module_conf_generate.pl' do
+  package 'perl'
+
+  cookbook_file '/usr/local/bin/apache2_module_conf_generate.pl' do
     source 'apache2_module_conf_generate.pl'
-    mode 0755
-    owner 'root'
-    group 'root'
+    mode   '0755'
+    owner  'root'
+    group  node['apache']['root_group']
   end
 
-  ['sites-available','sites-enabled','mods-available','mods-enabled'].each do |dir|
-    directory "#{node[:apache][:dir]}/#{dir}" do
-      mode 0755
+  %w[sites-available sites-enabled mods-available mods-enabled].each do |dir|
+    directory "#{node['apache']['dir']}/#{dir}" do
+      mode  '0755'
       owner 'root'
-      group 'root'
-      action :create
+      group node['apache']['root_group']
     end
   end
 
   execute 'generate-module-list' do
-    if node[:kernel][:machine] == 'x86_64'
-      libdir = 'lib64'
-    else
-      libdir = 'lib'
-    end
-    command "/usr/local/bin/apache2_module_conf_generate.pl /usr/#{libdir}/httpd/modules /etc/httpd/mods-available"
-    action :run
+    command "/usr/local/bin/apache2_module_conf_generate.pl #{node['apache']['lib_dir']} #{node['apache']['dir']}/mods-available"
+    action  :nothing
   end
 
-  ['a2ensite','a2dissite','a2enmod','a2dismod'].each do |modscript|
+  %w[a2ensite a2dissite a2enmod a2dismod].each do |modscript|
     template "/usr/sbin/#{modscript}" do
       source "#{modscript}.erb"
-      mode 0755
+      mode  '0700'
       owner 'root'
-      group 'root'
+      group node['apache']['root_group']
     end
   end
 
   # installed by default on centos/rhel, remove in favour of mods-enabled
-  file "#{node[:apache][:dir]}/conf.d/proxy_ajp.conf" do
+  %w[proxy_ajp auth_pam authz_ldap webalizer ssl welcome].each do |f|
+    file "#{node['apache']['dir']}/conf.d/#{f}.conf" do
+      action :delete
+      backup false
+    end
+  end
+
+  # installed by default on centos/rhel, remove in favour of mods-enabled
+  file "#{node['apache']['dir']}/conf.d/README" do
     action :delete
     backup false
   end
 
-  file "#{node[:apache][:dir]}/conf.d/README" do
+  # enable mod_deflate for consistency across distributions
+  include_recipe 'apache2::mod_deflate'
+end
+
+if platform_family?('freebsd')
+  file "#{node['apache']['dir']}/Includes/no-accf.conf" do
     action :delete
     backup false
   end
 
-  # welcome page moved to the default-site.rb temlate
-  file "#{node[:apache][:dir]}/conf.d/welcome.conf" do
+  directory "#{node['apache']['dir']}/Includes" do
     action :delete
-    backup false
+  end
+
+  %w[
+      httpd-autoindex.conf httpd-dav.conf httpd-default.conf httpd-info.conf
+      httpd-languages.conf httpd-manual.conf httpd-mpm.conf
+      httpd-multilang-errordoc.conf httpd-ssl.conf httpd-userdir.conf
+      httpd-vhosts.conf
+  ].each do |f|
+    file "#{node['apache']['dir']}/extra/#{f}" do
+      action :delete
+      backup false
+    end
+  end
+
+  directory "#{node['apache']['dir']}/extra" do
+    action :delete
   end
 end
 
-directory "#{node[:apache][:dir]}/ssl" do
-  action :create
-  mode 0755
-  owner 'root'
-  group 'root'
+%W[
+  #{node['apache']['dir']}/ssl
+  #{node['apache']['dir']}/conf.d
+  #{node['apache']['cache_dir']}
+].each do |path|
+  directory path do
+    mode  '0755'
+    owner 'root'
+    group node['apache']['root_group']
+  end
+end
+
+# Set the preferred execution binary - prefork or worker
+template '/etc/sysconfig/httpd' do
+  source   'etc-sysconfig-httpd.erb'
+  owner    'root'
+  group    node['apache']['root_group']
+  mode     '0644'
+  notifies :restart, 'service[apache2]'
+  only_if  { platform_family?('rhel', 'fedora') }
 end
 
 template 'apache2.conf' do
-  case node[:platform]
-  when 'centos','redhat','fedora','amazon'
-    path "#{node[:apache][:dir]}/conf/httpd.conf"
-  when 'debian','ubuntu'
-    path "#{node[:apache][:dir]}/apache2.conf"
+  case node['platform_family']
+  when 'rhel', 'fedora', 'arch'
+    path "#{node['apache']['dir']}/conf/httpd.conf"
+  when 'debian'
+    path "#{node['apache']['dir']}/apache2.conf"
+  when 'freebsd'
+    path "#{node['apache']['dir']}/httpd.conf"
   end
-  source 'apache2.conf.erb'
-  owner 'root'
-  group 'root'
-  mode 0644
-  notifies :restart, resources(:service => 'apache2')
+  source   'apache2.conf.erb'
+  owner    'root'
+  group    node['apache']['root_group']
+  mode     '0644'
+  notifies :restart, 'service[apache2]'
 end
 
-template 'security' do
-  path "#{node[:apache][:dir]}/conf.d/security"
-  source 'security.erb'
-  owner 'root'
-  group 'root'
-  mode 0644
-  backup false
-  notifies :restart, resources(:service => 'apache2')
+template 'apache2-conf-security' do
+  path     "#{node['apache']['dir']}/conf.d/security.conf"
+  source   'security.erb'
+  owner    'root'
+  group    node['apache']['root_group']
+  mode     '0644'
+  backup   false
+  notifies :restart, 'service[apache2]'
 end
 
-template 'charset' do
-  path "#{node[:apache][:dir]}/conf.d/charset"
-  source 'charset.erb'
-  owner 'root'
-  group 'root'
-  mode 0644
-  backup false
-  notifies :restart, resources(:service => 'apache2')
+template 'apache2-conf-charset' do
+  path      "#{node['apache']['dir']}/conf.d/charset.conf"
+  source   'charset.erb'
+  owner    'root'
+  group    node['apache']['root_group']
+  mode     '0644'
+  backup   false
+  notifies :restart, 'service[apache2]'
 end
 
-template "#{node[:apache][:dir]}/ports.conf" do
-  source 'ports.conf.erb'
-  group 'root'
-  owner 'root'
-  mode 0644
-  notifies :restart, resources(:service => 'apache2')
+template "#{node['apache']['dir']}/ports.conf" do
+  source   'ports.conf.erb'
+  owner    'root'
+  group    node['apache']['root_group']
+  mode     '0644'
+  notifies :restart, 'service[apache2]'
 end
 
-template "#{node[:apache][:dir]}/sites-available/default" do
-  source 'default-site.erb'
-  owner 'root'
-  group 'root'
-  mode 0644
-  notifies :restart, resources(:service => 'apache2')
+template "#{node['apache']['dir']}/sites-available/default" do
+  source   'default-site.erb'
+  owner    'root'
+  group    node['apache']['root_group']
+  mode     '0644'
+  notifies :restart, 'service[apache2]'
 end
 
-include_recipe 'apache2::mod_status'
-include_recipe 'apache2::mod_headers'
-include_recipe 'apache2::mod_alias'
-include_recipe 'apache2::mod_auth_basic'
-include_recipe 'apache2::mod_authn_file'
-include_recipe 'apache2::mod_authz_default'
-include_recipe 'apache2::mod_authz_groupfile'
-include_recipe 'apache2::mod_authz_host'
-include_recipe 'apache2::mod_authz_user'
-include_recipe 'apache2::mod_autoindex'
-include_recipe 'apache2::mod_dir'
-include_recipe 'apache2::mod_env'
-include_recipe 'apache2::mod_mime'
-include_recipe 'apache2::mod_negotiation'
-include_recipe 'apache2::mod_setenvif'
-include_recipe 'apache2::mod_log_config' if platform?('centos','redhat','amazon')
-include_recipe 'apache2::mod_ssl'
-include_recipe 'apache2::mod_expires'
-include_recipe 'apache2::logrotate'
+node['apache']['default_modules'].each do |mod|
+  module_recipe_name = mod =~ /^mod_/ ? mod : "mod_#{mod}"
+  include_recipe "apache2::#{module_recipe_name}"
+end
 
-# uncomment to get working example site on centos/redhat/fedora/amazon
-#apache_site 'default'
+apache_site 'default' do
+  enable node['apache']['default_site_enabled']
+end
 
 service 'apache2' do
   action :start
-end
-
-file "#{node[:apache][:document_root]}/index.html" do
-  action :delete
-  backup false
-  only_if do
-    File.exists?("#{node[:apache][:document_root]}/index.html")
-  end
 end
