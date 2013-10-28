@@ -1,4 +1,4 @@
-opsworks-php54-app-layer-cookbooks
+opsworks-php55-app-layer-cookbooks
 ==================================
 
 AWS OpsWorks layer with support for PHP 5.5 and php application deployment
