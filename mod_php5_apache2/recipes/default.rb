@@ -1,8 +1,6 @@
-
 case node[:platform]
     
     when "amazon"
-    # node.set['php']['packages'] = ['php55w', 'php55w-devel', 'php55w-cli', 'php55w-snmp', 'php55w-soap', 'php55w-xml', 'php55w-xmlrpc', 'php55w-process', 'php55w-mysqlnd', 'php55w-pecl-memcache', 'php55w-opcache', 'php55w-pdo', 'php55w-imap', 'php55w-mbstring']
     node.set['mysql']['server']['packages'] = %w{mysql55-server}
     node.set['mysql']['client']['packages'] = %w{mysql55}
     
@@ -27,8 +25,8 @@ case node[:platform]
     # get the metadata
     execute "yum -q makecache"
     
-    # manually install php 5.5....
-    execute "yum install -y --skip-broken php55w php55w-devel php55w-cli php55w-snmp php55w-soap php55w-xml php55w-xmlrpc php55w-process php55w-mysqlnd php55w-pecl-memcache php55w-opcache php55w-pdo php55w-imap php55w-mbstring"
+    # manually install php 5.5.6. note that php v5.5.7 is broken under amazon linux ami
+    execute "yum install -y --skip-broken php55w-5.5.6 php55w-devel-5.5.6 php55w-cli-5.5.6 php55w-snmp-5.5.6 php55w-soap-5.5.6 php55w-xml-5.5.6 php55w-xmlrpc-5.5.6 php55w-process-5.5.6 php55w-mysqlnd-5.5.6 php55w-opcache-5.5.6 php55w-pecl-memcache php55w-pdo-5.5.6 php55w-imap-5.5.6 php55w-mbstring-5.5.6 php55w-intl-5.5.6"
 
   when "rhel", "fedora", "suse", "centos"
   # add the webtatic repository
