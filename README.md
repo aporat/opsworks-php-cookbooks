@@ -12,3 +12,11 @@ Initial Setup
   * add phpapp::configure & mysql::client in the setup lifetime event
   * add phpapp::deploy in the deploy lifetime event
 5. Add a PHP application from the "Applications" section
+
+
+Vagrant Setup
+=============
+1. Download Vagrant 1.5+ from http://www.vagrantup.com
+2. Download VirtualBox from https://www.virtualbox.org
+3. Install vagrant-omnibus `vagrant plugin install vagrant-omnibus`
+4. Create a new project with the supplied `Vagrantfile` and edit `chef.cookbooks_path` to point to the cookbooks folder
