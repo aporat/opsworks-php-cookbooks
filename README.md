@@ -5,7 +5,7 @@ AWS OpsWorks custom layer with support for PHP 5.5 and php application deploymen
 
 Initial Setup
 =============
-1. Create a Stack with a custom cookbook pointing to `httphttps://github.com/aporat/opsworks-php55-app-layer-cookbooks.git` (or clone this repo and host it yourself)
+1. Create a Stack with a custom cookbook pointing to `https://github.com/aporat/opsworks-php55-app-layer-cookbooks.git` (or clone this repo and host it yourself)
 2. Pick chef version `11.10` as the chef version
 2. Add a new `App Server -> PHP Layer` layer. Note that only Amazon Linux AMI is supported. 
 3. Edit the newly created layer, and add the custom recipes:
