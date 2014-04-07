@@ -9,12 +9,12 @@ node[:deploy].each do |application, deploy|
   ) if deploy[:scm][:scm_type].to_s == 'git'
 
   # clone the repo
-  execute "cd /var && git clone #{deploy[:scm][:repository]} #{app_name}" do
+  execute "cd /var && git clone #{deploy[:scm][:repository]} #{node['phpapp']['app_name']}" do
     ignore_failure true
   end
 
   # set any php.ini settings needed
-  template "/etc/php.d/#{app_name}.ini" do
+  template "/etc/php.d/#{node['phpapp']['app_name']}.ini" do
     source "php.conf.erb"
     owner "root"
     group "root"
@@ -44,23 +44,24 @@ node[:deploy].each do |application, deploy|
   execute "ssh-agent bash -c 'ssh-add /root/.ssh/id_deploy'"
 
   # set apache2 hosts
-  web_app app_name do 
-    docroot /var/#{app_name}
+  web_app "#{node['phpapp']['app_name']}" do
+    server_name "#{node['phpapp']['hostname']}"
+    docroot "/var/#{node['phpapp']['app_name']}/public"
     template "webapp.conf.erb" 
     log_dir node['apache']['log_dir'] 
   end
 
   # use simple git pull to deploy code changes
-  execute "cd /var/#{app_name} && git clean -df && git reset --hard && git pull"
+  execute "cd /var/#{node['phpapp']['app_name']} && git clean -df && git reset --hard && git pull"
   
   # install composer
   script "install_composer" do
     interpreter "bash"
-    user "#{node['phpapp']['deploy']['user']}"
-    cwd "/var/#{app_name}"
+    user "root"
+    cwd "/var/#{node['phpapp']['app_name']}"
     code <<-EOH
     curl -s https://getcomposer.org/installer | php
-    php composer.phar install --prefer-source --no-interaction
+    php composer.phar install --prefer-source --optimize-autoloader  --no-interaction
     EOH
   end
   

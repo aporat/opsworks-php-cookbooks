@@ -1,0 +1,1 @@
+default[:newrelic][:key] = ''

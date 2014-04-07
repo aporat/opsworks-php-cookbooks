@@ -1,18 +1,13 @@
-<VirtualHost *:80>
-    ServerName <%= node[:phpapp][:domain] %>
-    DocumentRoot <%= @params[:docroot] %>
-    
-    <Directory "<%= @params[:docroot] %>">
-      Options Indexes FollowSymLinks MultiViews
-      AllowOverride All
-      Order allow,deny
-      allow from all
 
-      RewriteEngine On
-      RewriteCond %{REQUEST_FILENAME} -s [OR]
-      RewriteCond %{REQUEST_FILENAME} -l [OR]
-      RewriteCond %{REQUEST_FILENAME} -d
-      RewriteRule ^.*$ - [NC,L]
-      RewriteRule ^.*$ index.php [NC,L]
-    </Directory>
-</VirtualHost>
+<VirtualHost *:80>
+   ServerName <%= @params[:server_name] %>
+   DocumentRoot <%= @params[:docroot] %>
+
+   <Directory <%= @params[:docroot] %>>
+     Options FollowSymLinks
+     AllowOverride All
+     Order allow,deny
+     Allow from all
+     
+   </Directory>
+ </VirtualHost>

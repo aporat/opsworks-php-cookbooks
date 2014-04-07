@@ -8,7 +8,8 @@ case node[:platform]
     yum_repository "webtatic" do
         repo_name "webtatic"
         description "webtatic Stable repo"
-        url "http://repo.webtatic.com/yum/el6/x86_64/"
+        #        url "http://repo.webtatic.com/yum/el6/x86_64/"
+        url "http://repo.webtatic.com/yum/el6-archive/x86_64/"
         key "RPM-GPG-KEY-webtatic-andy"
         action :add
     end

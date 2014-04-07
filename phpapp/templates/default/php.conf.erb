@@ -1,5 +1,7 @@
-date.timezone = <%= node[:phpapp][:timezone] %>
+date.timezone = UTC
 upload_tmp_dir = /tmp
 upload_max_filesize = 40M
-display_errors = Off
+display_errors = Off 
 session.save_path = /tmp
+output_buffering = On
+short_open_tag = 1
