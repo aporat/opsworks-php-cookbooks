@@ -1,7 +1,7 @@
 opsworks-php55-app-layer-cookbooks
 ==================================
 
-AWS OpsWorks custom layer with support for PHP 5.5 and php application deployment. Also contains a centos 6.4 virtual machine using Vagrant.
+AWS OpsWorks custom layer with support for PHP 5.5 and php application deployment. Also contains a centos 6.5 virtual machine using Vagrant.
 
 Initial Setup
 =============
