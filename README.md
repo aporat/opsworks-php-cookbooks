@@ -3,8 +3,11 @@ opsworks-php55-app-layer-cookbooks
 
 AWS OpsWorks custom layer with support for PHP 5.5 and php application deployment. Also contains a centos 6.5 virtual machine using Vagrant.
 
-Initial Setup
+Please read opsworks user guide before using these cookbooks http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-chef11-10.html
+
+Initial Stack Setup
 =============
+
 1. Add a new stack
 2. Under Advanced Settings:
    - Pick chef version `11.10` as the chef version
@@ -19,6 +22,7 @@ Initial Setup
 
 Vagrant Setup
 =============
+
 1. Download Vagrant 1.5+ from http://www.vagrantup.com
 2. Download VirtualBox from https://www.virtualbox.org
 3. Install ChefDK ">= 0.2.0" https://downloads.getchef.com/chef-dk/mac/#/
