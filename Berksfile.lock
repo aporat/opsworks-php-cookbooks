@@ -1,0 +1,62 @@
+DEPENDENCIES
+  apache2 (= 1.8.4)
+  apt
+  ark
+  bluepill (= 2.3.1)
+  build-essential (= 1.4.2)
+  deploy
+    path: deploy_cookbook
+  mod_php5_apache2
+    path: mod_php5_apache2_cookbook
+  mysql (= 3.0.12)
+  newrelic
+    path: newrelic_cookbook
+  openssl (= 1.1.0)
+  php (= 1.2.6)
+  phpapp
+    path: phpapp_cookbook
+  yum (= 0.1.0)
+
+GRAPH
+  7-zip (1.0.2)
+    windows (>= 1.2.2)
+  apache2 (1.8.4)
+  apt (2.6.0)
+  ark (0.9.0)
+    7-zip (>= 0.0.0)
+    windows (>= 0.0.0)
+  bluepill (2.3.1)
+    rsyslog (>= 0.0.0)
+  build-essential (1.4.2)
+  chef-sugar (2.2.0)
+  chef_handler (1.1.6)
+  deploy (0.1.0)
+  mod_php5_apache2 (0.2.1)
+    apache2 (>= 0.0.0)
+    apt (>= 0.0.0)
+    build-essential (>= 0.0.0)
+    php (>= 0.0.0)
+    yum (>= 0.0.0)
+  mysql (3.0.12)
+    build-essential (~> 1.4)
+    openssl (~> 1.1)
+  newrelic (1.1.8)
+  openssl (1.1.0)
+  php (1.2.6)
+    build-essential (>= 0.0.0)
+    mysql (>= 0.0.0)
+    xml (>= 0.0.0)
+  phpapp (0.5.2)
+    apache2 (>= 0.0.0)
+    apt (>= 0.0.0)
+    build-essential (>= 0.0.0)
+    mod_php5_apache2 (>= 0.0.0)
+    php (>= 0.0.0)
+    yum (>= 0.0.0)
+  rsyslog (1.12.2)
+  windows (1.34.2)
+    chef_handler (>= 0.0.0)
+  xml (1.2.6)
+    build-essential (>= 0.0.0)
+    chef-sugar (>= 0.0.0)
+  yum (0.1.0)
