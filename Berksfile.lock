@@ -15,6 +15,8 @@ DEPENDENCIES
   php (= 1.2.6)
   phpapp
     path: phpapp_cookbook
+  phpmyadmin
+    path: phpmyadmin_cookbook
   yum (= 0.1.0)
 
 GRAPH
@@ -41,6 +43,13 @@ GRAPH
     build-essential (~> 1.4)
     openssl (~> 1.1)
   newrelic (1.1.8)
+  nginx (1.8.0)
+    apt (>= 0.0.0)
+    build-essential (>= 0.0.0)
+    ohai (>= 1.1.4)
+    runit (>= 0.0.0)
+    yum (>= 0.0.0)
+  ohai (2.0.1)
   openssl (1.1.0)
   php (1.2.6)
     build-essential (>= 0.0.0)
@@ -52,8 +61,16 @@ GRAPH
     build-essential (>= 0.0.0)
     mod_php5_apache2 (>= 0.0.0)
     php (>= 0.0.0)
+    phpmyadmin (>= 0.0.0)
     yum (>= 0.0.0)
+  phpmyadmin (1.0.4)
+    apache2 (>= 0.0.0)
+    nginx (>= 0.0.0)
+    php (>= 0.0.0)
   rsyslog (1.12.2)
+  runit (1.4.6)
+    build-essential (>= 0.0.0)
+    yum (< 3.0.0)
   windows (1.34.2)
     chef_handler (>= 0.0.0)
   xml (1.2.6)

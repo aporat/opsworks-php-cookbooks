@@ -12,3 +12,10 @@
      SetEnv APPLICATION_ENV development
    </Directory>
  </VirtualHost>
+
+Alias /phpmyadmin "/opt/phpmyadmin/"
+Alias /phpMyAdmin "/opt/phpmyadmin/"
+<Directory "/opt/phpmyadmin/">
+    Order allow,deny
+    Allow from all
+</Directory>
