@@ -3,13 +3,11 @@ include_recipe "apache2::default"
 include_recipe "apache2::mod_rewrite"
 include_recipe "mod_php5_apache2::default"
 
-execute "yum remove -y mysql-libs.x86_64" do
-  ignore_failure true
-end
-
 package "git"
-package "mysql55w"
 package "python-setuptools"
+
+# install supervisord
+execute "easy_install supervisor"
 
 # disable opcache fast shutdown
 execute "sed -i 's/opcache.fast_shutdown=1/opcache.fast_shutdown=0/g' /etc/php.d/opcache.ini" do

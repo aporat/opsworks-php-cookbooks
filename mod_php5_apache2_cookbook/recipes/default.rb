@@ -1,70 +1,33 @@
 case node[:platform]
-    
-    when "amazon"
-    node.set['mysql']['server']['packages'] = %w{mysql55w-server}
-    node.set['mysql']['client']['packages'] = %w{mysql55w}
 
-    include_recipe "build-essential"
-    include_recipe "apache2::default"
-    include_recipe "apache2::mod_rewrite"
+  when "rhel", "fedora", "suse", "centos", "amazon"
+        # add the EPEL repo
+        yum_repository 'epel' do
+          description 'Extra Packages for Enterprise Linux'
+        mirrorlist 'http://mirrors.fedoraproject.org/mirrorlist?repo=epel-6&arch=x86_64'
+        gpgkey 'http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-6'
+          action :create
+        end
 
-    # add the webtatic repository
-    yum_repository "webtatic" do
-        repo_name "webtatic"
-        description "webtatic Stable repo"
-        url "http://repo.webtatic.com/yum/el6/x86_64/"
-        key "RPM-GPG-KEY-webtatic-andy"
-        action :add
-    end
-    
-    yum_key "RPM-GPG-KEY-webtatic-andy" do
-        url "http://repo.webtatic.com/yum/RPM-GPG-KEY-webtatic-andy"
-        action :add
-    end
-    
-    
-    # remove any existing php/mysql
-    execute "yum remove -y php* mysql*"
-    
-    # get the metadata
-    execute "yum -q makecache"
-    
-    # manually install php 5.5
-    execute "yum install -y php55w php55w-devel php55w-cli php55w-snmp php55w-soap php55w-xml php55w-xmlrpc php55w-process php55w-mysqlnd php55w-pecl-memcache php55w-opcache php55w-pdo php55w-imap php55w-mbstring php55w-intl"
+      # add the webtatic repo
+      yum_repository 'webtatic' do
+        description 'webtatic Project'
+        mirrorlist 'http://repo.webtatic.com/yum/el6/x86_64/mirrorlist'
+        gpgkey 'http://repo.webtatic.com/yum/RPM-GPG-KEY-webtatic-andy'
+        action :create
+      end
 
-  when "rhel", "fedora", "suse", "centos"
-  # add the webtatic repository
-  yum_repository "webtatic" do
-    repo_name "webtatic"
-    description "webtatic Stable repo"
-    url "http://repo.webtatic.com/yum/el6/x86_64/"
-    key "RPM-GPG-KEY-webtatic-andy"
-    action :add
-  end
+      node.set['apache']['version'] = '2.2'
+      node.set['apache']['package'] = 'httpd'
 
-  yum_key "RPM-GPG-KEY-webtatic-andy" do
-    url "http://repo.webtatic.com/yum/RPM-GPG-KEY-webtatic-andy"
-    action :add
-  end
-  
-  node.set['php']['packages'] = ['php55w', 'php55w-devel', 'php55w-cli', 'php55w-snmp', 'php55w-soap', 'php55w-xml', 'php55w-xmlrpc', 'php55w-process', 'php55w-mysqlnd', 'php55w-pecl-memcache', 'php55w-opcache', 'php55w-pdo', 'php55w-imap', 'php55w-mbstring', 'php55w-intl']
-  node.set['mysql']['server']['packages'] = %w{mysql55w-server}
-  node.set['mysql']['client']['packages'] = %w{mysql55w}
+      node.set['php']['packages'] = ['php56w', 'php56w-devel', 'php56w-cli', 'php56w-snmp', 'php56w-soap', 'php56w-xml', 'php56w-xmlrpc', 'php56w-process', 'php56w-mysqlnd', 'php56w-pecl-memcache', 'php56w-opcache', 'php56w-pdo', 'php56w-imap', 'php56w-mbstring', 'php56w-intl', 'php56w-mcrypt']
 
-  include_recipe "build-essential"
-  include_recipe "apache2::default"
-  include_recipe "apache2::mod_rewrite"
-  include_recipe "php"
+      # manual install
+      # execute "yum install -y php56w php56w-devel php56w-cli php56w-snmp php56w-soap php56w-xml php56w-xmlrpc php56w-process php56w-mysqlnd php56w-pecl-memcache php56w-opcache php56w-pdo php56w-imap php56w-mbstring php56w-intl php56w-mcrypt"
 
-  when "debian"
-    include_recipe "apt"
-	apt_repository "wheezy-php55" do
-		uri "#{node['php55']['dotdeb']['uri']}"
-		distribution "#{node['php55']['dotdeb']['distribution']}-php55"
-		components ['all']
-		key "http://www.dotdeb.org/dotdeb.gpg"
-		action :add
-	end
-	
-	  include_recipe "php"
-  end
+      include_recipe "build-essential"
+      include_recipe "apache2::default"
+      include_recipe "apache2::mod_rewrite"
+      include_recipe "php"
+
+end

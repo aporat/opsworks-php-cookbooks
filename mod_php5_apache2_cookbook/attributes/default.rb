@@ -1,6 +1,6 @@
 #
 # Author:: Adar Porat(<adar.porat@gmail.com>)
-# Cookbook Name:: php55
+# Cookbook Name:: php56
 # Attribute:: default
 ##
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-case node["platform_family"]
-  when "debian"
-    node.default['php55']['dotdeb']['uri'] = "http://packages.dotdeb.org"
-    node.default['php55']['dotdeb']['distribution'] = "wheezy"
-end

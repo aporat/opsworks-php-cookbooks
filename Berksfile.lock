@@ -1,60 +1,68 @@
 DEPENDENCIES
-  apache2 (= 1.8.4)
+  apache2
   apt
   ark
-  bluepill (= 2.3.1)
-  build-essential (= 1.4.2)
+  bluepill
+  build-essential
   deploy
     path: deploy_cookbook
   mod_php5_apache2
     path: mod_php5_apache2_cookbook
-  mysql (= 3.0.12)
+  mysql
   newrelic
     path: newrelic_cookbook
-  openssl (= 1.1.0)
-  php (= 1.2.6)
+  openssl
+  php
   phpapp
     path: phpapp_cookbook
   phpmyadmin
     path: phpmyadmin_cookbook
-  yum (= 0.1.0)
+  yum
 
 GRAPH
   7-zip (1.0.2)
     windows (>= 1.2.2)
-  apache2 (1.8.4)
-  apt (2.6.0)
+  apache2 (3.1.0)
+  apt (2.7.0)
   ark (0.9.0)
     7-zip (>= 0.0.0)
     windows (>= 0.0.0)
   bluepill (2.3.1)
     rsyslog (>= 0.0.0)
-  build-essential (1.4.2)
-  chef-sugar (2.2.0)
-  chef_handler (1.1.6)
+  build-essential (2.2.3)
+  chef-sugar (3.1.0)
+  chef_handler (1.1.9)
   deploy (0.1.0)
-  mod_php5_apache2 (0.2.1)
+  iis (4.1.1)
+    windows (>= 1.34.6)
+  mod_php5_apache2 (0.2.5)
     apache2 (>= 0.0.0)
     apt (>= 0.0.0)
     build-essential (>= 0.0.0)
     php (>= 0.0.0)
     yum (>= 0.0.0)
-  mysql (3.0.12)
-    build-essential (~> 1.4)
-    openssl (~> 1.1)
+  mysql (6.0.22)
+    smf (>= 0.0.0)
+    yum-mysql-community (>= 0.0.0)
   newrelic (1.1.8)
-  nginx (1.8.0)
-    apt (>= 0.0.0)
-    build-essential (>= 0.0.0)
-    ohai (>= 1.1.4)
-    runit (>= 0.0.0)
-    yum (>= 0.0.0)
+  nginx (2.7.6)
+    apt (~> 2.2)
+    bluepill (~> 2.3)
+    build-essential (~> 2.0)
+    ohai (~> 2.0)
+    runit (~> 1.2)
+    yum-epel (~> 0.3)
   ohai (2.0.1)
-  openssl (1.1.0)
-  php (1.2.6)
+  openssl (4.0.0)
+    chef-sugar (>= 0.0.0)
+  packagecloud (0.0.18)
+  php (1.5.0)
     build-essential (>= 0.0.0)
+    iis (>= 0.0.0)
     mysql (>= 0.0.0)
+    windows (>= 0.0.0)
     xml (>= 0.0.0)
+    yum-epel (>= 0.0.0)
   phpapp (0.5.2)
     apache2 (>= 0.0.0)
     apt (>= 0.0.0)
@@ -67,13 +75,19 @@ GRAPH
     apache2 (>= 0.0.0)
     nginx (>= 0.0.0)
     php (>= 0.0.0)
-  rsyslog (1.12.2)
-  runit (1.4.6)
-    build-essential (>= 0.0.0)
-    yum (< 3.0.0)
-  windows (1.34.2)
+  rbac (1.0.3)
+  rsyslog (2.0.0)
+  runit (1.6.0)
+    packagecloud (>= 0.0.0)
+  smf (2.2.6)
+    rbac (>= 1.0.1)
+  windows (1.37.0)
     chef_handler (>= 0.0.0)
-  xml (1.2.6)
+  xml (1.2.13)
     build-essential (>= 0.0.0)
     chef-sugar (>= 0.0.0)
-  yum (0.1.0)
+  yum (3.6.0)
+  yum-epel (0.6.0)
+    yum (~> 3.0)
+  yum-mysql-community (0.1.17)
+    yum (>= 3.0)

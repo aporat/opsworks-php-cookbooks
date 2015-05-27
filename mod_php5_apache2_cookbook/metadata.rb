@@ -3,7 +3,7 @@ maintainer        "Adar Porat"
 maintainer_email "adar.porat@gmail.com"
 license           "Apache 2.0"
 description      "Installs and config php 5.5"
-version          "0.2.1"
+version          "0.2.5"
 
 depends "build-essential"
 depends "apt"

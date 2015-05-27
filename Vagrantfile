@@ -13,13 +13,13 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 80,  host: 80
   config.vm.network :forwarded_port, guest: 443,  host: 443
 
-  config.vm.synced_folder "", "/var/webapp/", :id => "webapp-root", :nfs => true
+  config.vm.synced_folder "app", "/var/webapp/", :id => "webapp-root", :nfs => true
   
   config.berkshelf.enabled = true
-  config.berkshelf.berksfile_path = '../opsworks-php55-app-layer-cookbooks/Berksfile'
+  config.berkshelf.berksfile_path = 'Berksfile'
 
   config.vm.provision :chef_solo do |chef|
-      chef.cookbooks_path = "../opsworks-php55-app-layer-cookbooks"
+      chef.cookbooks_path = "."
   
       chef.json = {
         :yum => {

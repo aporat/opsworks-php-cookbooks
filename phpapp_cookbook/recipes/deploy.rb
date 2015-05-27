@@ -50,30 +50,10 @@ node[:deploy].each do |application, deploy|
   script "install_composer" do
     interpreter "bash"
     user "root"
-    cwd "/var/#{node['phpapp']['app_name']}"
+    cwd "/var/app"
     code <<-EOH
-    curl -s https://getcomposer.org/installer | php
-    php composer.phar install --prefer-source --optimize-autoloader  --no-interaction
+    composer install --prefer-source --optimize-autoloader  --no-interaction
     EOH
   end
-  
-  # start the worker on server reboot
-  execute "echo \"supervisord -c /var/#{node['phpapp']['app_name']}/bin/supervisord.conf\" >> /etc/rc.d/rc.local" do
-      not_if "grep -q supervisord /etc/rc.d/rc.local"
-  end
-  
-  # Run supervisord with the config file.
-  #
-  # This will actually execute only on first deployment.
-  # Then, since supervisord is already running, it will give out an error and do nothing.
-  execute "supervisord -c /var/#{node['phpapp']['app_name']}/bin/supervisord.conf" do
-      ignore_failure true
-  end
-  
-  # https://github.com/chrisboulton/php-resque#signals
-  # wait for the worker to finish and then kill it so supervisord will restart it
-  execute "ps aux | grep resque-1.2 | grep -v grep | awk '{print $2}' | xargs kill -QUIT" do
-      ignore_failure true
-  end
-  
+
 end
