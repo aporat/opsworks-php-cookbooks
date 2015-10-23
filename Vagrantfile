@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.hostname = "webapp.dev"
 
-  config.vm.box = "chef/centos-6.5"
+  config.vm.box = "bento/centos-7.1"
  
   config.vm.network :private_network, ip: "192.168.50.4"
   config.vm.network :forwarded_port, guest: 80,  host: 80
