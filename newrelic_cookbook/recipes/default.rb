@@ -7,7 +7,7 @@ execute "yum -q makecache" do
 end
 
 execute "add newrelic repository" do
-  command "rpm -Uvh http://download.newrelic.com/pub/newrelic/el5/i386/newrelic-repo-5-3.noarch.rpm"
+  command "rpm -Uvh https://yum.newrelic.com/pub/newrelic/el5/x86_64/newrelic-repo-5-3.noarch.rpm"
   creates "/etc/yum.repos.d/newrelic.repo"
 end
 

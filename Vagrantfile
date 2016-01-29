@@ -3,7 +3,7 @@
 
 
 Vagrant.configure("2") do |config|
-  config.omnibus.chef_version = "11.10.0"
+  config.omnibus.chef_version = "12.6"
 
   config.vm.hostname = "webapp.dev"
 
@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
       }
     
       chef.run_list = [
-        "recipe[phpapp::vagrant]"
+        "recipe[phpapp::setup_vagrant]"
       ]
   end   
      

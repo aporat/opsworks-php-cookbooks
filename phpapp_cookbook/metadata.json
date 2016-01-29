@@ -1,0 +1,43 @@
+{
+  "name": "phpapp",
+  "description": "Setup & deploys PHP git applications",
+  "long_description": "",
+  "maintainer": "Adar Porat",
+  "maintainer_email": "adar.porat@gmail.com",
+  "license": "MIT",
+  "platforms": {
+  },
+  "dependencies": {
+    "build-essential": ">= 0.0.0",
+    "apt": ">= 0.0.0",
+    "yum": ">= 0.0.0",
+    "apache2": ">= 0.0.0",
+    "php": ">= 0.0.0",
+    "phpmyadmin": ">= 0.0.0",
+    "application_git": ">= 0.0.0"
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "phpapp::setup_php5": "Setup php 5.6 environment",
+    "phpapp::setup_shared": "Setup a PHP application environment",
+    "phpapp::setup_vagrant": "Setup a PHP application vagrant environment",
+    "phpapp::setup_opsworks": "Setup a PHP application EC2 environment",
+    "phpapp::deploy_opsworks": "Deploys a PHP application"
+  },
+  "version": "0.8.0",
+  "source_url": "",
+  "issues_url": ""
+}

@@ -1,4 +1,13 @@
-include_recipe "phpapp::setup"
+include_recipe "phpapp::setup_shared"
+include_recipe "phpmyadmin::default"
+
+phpmyadmin_db 'Dev DB' do
+  host 'localhost'
+  port 3306
+  username 'root'
+  password ''
+  auth_type 'http'
+end
 
 bash "disable_firewall" do
   only_if "chkconfig --list | grep iptables"
@@ -8,16 +17,6 @@ bash "disable_firewall" do
   EOH
 end
 
-include_recipe "phpmyadmin::default"
-
-phpmyadmin_db 'Dev DB' do
-  host 'localhost'
-  port 3306
-  username 'root'
-  password ''
-  auth_type 'cookie'
-  hide_dbs %w{ information_schema mysql phpmyadmin performance_schema }
-end
 
 web_app "web_app" do
     docroot "/var/#{node['phpapp']['path']}/public"
