@@ -1,8 +1,8 @@
 opsworks-php-cookbooks
 ==================================
 
-AWS OpsWorks custom layer with support for PHP 5.6 and php application deployment from a private git repository. 
-The project also contains a centos 7.1 virtual machine using Vagrant that emulate Amazon Linux AMI environment.
+AWS OpsWorks custom layer with support for PHP 7.1 and php application deployment from a private git repository. 
+The project also contains a centos 7 virtual machine using Vagrant that emulate Amazon Linux AMI environment.
 
 Please make sure to read opsworks user guide before using these cookbooks http://docs.aws.amazon.com/opsworks/latest/userguide/chef-12-linux.html
 
