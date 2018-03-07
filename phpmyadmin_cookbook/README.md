@@ -41,7 +41,6 @@ Attributes
 This cookbook supports the following attributes:
 
 * `version`: The desired PMA version
-* `checksum`: The sha256 checksum of the PMA desired version
 * `mirror`: The desired PMA download mirror
 * `fpm`: Enables the PMA FPM instance for serving via NGINX
 * `home`: The desired PMA installation home

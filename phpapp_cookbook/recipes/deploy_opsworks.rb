@@ -15,6 +15,6 @@ script "install_composer" do
   user "root"
   cwd "/var/app"
   code <<-EOH
-  composer install --prefer-source --optimize-autoloader  --no-interaction
+  composer install --prefer-source --optimize-autoloader  --no-interaction  --no-plugins --no-scripts
   EOH
 end

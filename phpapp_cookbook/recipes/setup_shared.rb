@@ -2,7 +2,7 @@ include_recipe "build-essential"
 include_recipe "apache2::default"
 include_recipe "apache2::mod_rewrite"
 include_recipe "yum"
-include_recipe "phpapp::setup_php5"
+include_recipe "phpapp::setup_php"
 
 package "git"
 package "python-setuptools"

@@ -23,7 +23,7 @@ actions :create, :delete
 
 attribute :name,	 		:kind_of => String, :required => true, :name_attribute => true
 attribute :host,			:regex => /[a-z0-9\.\-]+/, :required => true
-attribute :port,			:kind_of => Fixnum, :default => 3306
+attribute :port,			:kind_of => Integer, :default => 3306
 attribute :username,		:kind_of => String, :required => true
 attribute :password,		:kind_of => String, :required => true
 attribute :hide_dbs,		:kind_of => [ Array, String ], :default => []

@@ -3,11 +3,11 @@
 
 
 Vagrant.configure("2") do |config|
-  config.omnibus.chef_version = "12.6"
+  config.omnibus.chef_version = :latest
 
   config.vm.hostname = "webapp.dev"
 
-  config.vm.box = "bento/centos-7.1"
+  config.vm.box = "centos/7"
  
   config.vm.network :private_network, ip: "192.168.50.4"
   config.vm.network :forwarded_port, guest: 80,  host: 80
@@ -24,6 +24,9 @@ Vagrant.configure("2") do |config|
       chef.json = {
         :yum => {
             :exclude => 'kernel*'
+        },
+        :apache => {
+          :listen => ['*:80', '*:443']
         },
         :phpapp => {
             :domain => 'webapp.dev',

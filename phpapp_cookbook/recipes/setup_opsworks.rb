@@ -1,5 +1,4 @@
 node.set['apache']['version'] = '2.4'
-node.set['apache']['package'] = 'httpd24'
 
 include_recipe "phpapp::setup_shared"
 

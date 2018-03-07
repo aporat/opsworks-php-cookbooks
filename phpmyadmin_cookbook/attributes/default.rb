@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-default['phpmyadmin']['version'] = '4.5.1'
+default['phpmyadmin']['version'] = '4.7.9'
 default['phpmyadmin']['mirror'] = 'https://files.phpmyadmin.net/phpMyAdmin'
 
 default['phpmyadmin']['fpm'] = true

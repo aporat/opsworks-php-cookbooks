@@ -1,5 +1,6 @@
 include_recipe "phpapp::setup_shared"
 include_recipe "phpmyadmin::default"
+include_recipe "selinux::default"
 
 phpmyadmin_db 'Dev DB' do
   host 'localhost'
@@ -7,6 +8,14 @@ phpmyadmin_db 'Dev DB' do
   username 'root'
   password ''
   auth_type 'http'
+end
+
+execute "setenforce 0" do
+    ignore_failure true
+end
+
+selinux_state "SELinux Disabled" do
+  action :disabled
 end
 
 bash "disable_firewall" do

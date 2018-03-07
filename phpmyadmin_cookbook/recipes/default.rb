@@ -34,7 +34,6 @@ user user do
 	gid group
 	home home
 	shell '/usr/sbin/nologin'
-	supports :manage_home => true 
 end
 
 directory home do
