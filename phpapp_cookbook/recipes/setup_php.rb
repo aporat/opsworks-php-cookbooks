@@ -1,23 +1,24 @@
-node.override['apache']['version'] = '2.4'
+include_recipe "yum::default"
+include_recipe "apt::default"
 
-node.override['php']['directives'] = {
-  'date.timezone' => 'UTC',
-  'upload_tmp_dir' => '/tmp',
-  'display_errors' => 'Off',
-  'memory_limit' => '128M',
-  'post_max_size' => '16M',
-  'output_buffering' => 'On',
-  'short_open_tag' => 'On',
-  'session.save_path' => '/tmp',
-  'error_log' => '/var/log/php_errors.log',
-  'max_input_vars' => '10000',
-  'opcache.fast_shutdown' => '0',
-  'upload_max_filesize' => '12M'
-}
+case node['platform']
+  when 'amazon'
+    node.override['php']['packages'] = ['php72', 'php72-devel', 'php72-cli', 'php72-bcmath', 'php72-snmp', 'php72-soap', 'php72-xml', 'php72-xmlrpc', 'php72-process', 'php72-mysqlnd', 'php72-opcache', 'php72-pdo', 'php72-imap', 'php72-mbstring', 'php72-intl', 'php72-gd', 'php72-gmp']
 
-case node[:platform]
-  when 'rhel', 'fedora', 'suse', 'centos'
-    node.override['php']['packages'] = ['php71w', 'php71w-devel', 'php71w-cli', 'php71w-bcmath', 'php71w-snmp', 'php71w-soap', 'php71w-xml', 'php71w-xmlrpc', 'php71w-process', 'php71w-mysqlnd', 'php71w-opcache', 'php71w-pdo', 'php71w-imap', 'php71w-mbstring', 'php71w-intl', 'php71w-mcrypt', 'php71w-gd']
+    node.override['apache']['package'] = 'httpd24'
+    node.override['apache']['devel_package'] = 'httpd24-devel'
+  when 'ubuntu'
+
+    apt_repository 'ondrej-php' do
+      uri          'ppa:ondrej/php'
+      distribution node['lsb']['codename']
+    end
+
+    node.override['php']['conf_dir'] = '/etc/php/7.2/cli'
+    node.override['php']['packages'] = ['php7.2', 'php7.2-cli', 'php7.2-bcmath', 'php7.2-snmp', 'php7.2-soap', 'php7.2-xml', 'php7.2-xmlrpc', 'php7.2-mysqlnd', 'php7.2-curl', 'php7.2-opcache', 'php7.2-pdo', 'php7.2-imap', 'php7.2-mbstring', 'php7.2-intl', 'php7.2-gd', 'php7.2-gmp']
+
+  else
+    node.override['php']['packages'] = ['php', 'php-devel', 'php-cli', 'php-bcmath', 'php-snmp', 'php-soap', 'php-xml', 'php-xmlrpc', 'php-process', 'php-mysqlnd', 'php-opcache', 'php-pdo', 'php-imap', 'php-mbstring', 'php-intl', 'php-gd', 'php-gmp']
 
     # add the EPEL repo
     yum_repository 'epel' do
@@ -27,27 +28,28 @@ case node[:platform]
       action :create
     end
 
-    # add the webtatic repo
-    yum_repository 'webtatic' do
-      description 'webtatic Project'
-      mirrorlist 'http://repo.webtatic.com/yum/el7/x86_64/mirrorlist'
-      gpgkey 'http://repo.webtatic.com/yum/RPM-GPG-KEY-webtatic-el7'
+
+    # add the REMI repo
+    yum_repository 'remi' do
+      description "Remi's RPM repository for Enterprise Linux 7"
+      mirrorlist 'http://rpms.remirepo.net/enterprise/7/remi/mirror'
+      enabled true
+      gpgcheck true
+      gpgkey 'http://rpms.remirepo.net/RPM-GPG-KEY-remi'
+    end
+
+    yum_repository 'remi-php72' do
+      description "Remi's PHP 7.2 RPM repository for Enterprise Linux 7"
+      mirrorlist 'http://rpms.remirepo.net/enterprise/7/php72/mirror'
+      gpgkey 'http://rpms.remirepo.net/RPM-GPG-KEY-remi'
+      enabled true
       action :create
     end
 
-    include_recipe "php::package"
-    include_recipe "php::ini"
-    include_recipe "apache2::default"
-    include_recipe "apache2::mod_rewrite"
-
- when 'amazon'
-    node.override['php']['packages'] = ['php71', 'php71-devel', 'php71-cli', 'php71-bcmath', 'php71-snmp', 'php71-soap', 'php71-xml', 'php71-xmlrpc', 'php71-process', 'php71-mysqlnd', 'php71-opcache', 'php71-pdo', 'php71-imap', 'php71-mbstring', 'php71-intl', 'php71-mcrypt', 'php71-gd']
-
-    include_recipe "php::package"
-    include_recipe "php::ini"
-    include_recipe "apache2::default"
-    include_recipe "apache2::mod_rewrite"
-
-    end
+  end
 
 include_recipe "build-essential"
+include_recipe "apache2::default"
+include_recipe "apache2::mod_rewrite"
+include_recipe "php::package"
+include_recipe "php::ini"

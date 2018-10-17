@@ -3,18 +3,18 @@ include_recipe "phpmyadmin::default"
 include_recipe "selinux::default"
 
 phpmyadmin_db 'Dev DB' do
-  host 'localhost'
+  host "#{node['phpapp']['rds']}"
   port 3306
   username 'root'
   password ''
   auth_type 'http'
 end
 
-execute "setenforce 0" do
-    ignore_failure true
+selinux_state 'permissive' do
+  action :permissive
 end
 
-selinux_state "SELinux Disabled" do
+selinux_state 'disabled' do
   action :disabled
 end
 
@@ -26,15 +26,27 @@ bash "disable_firewall" do
   EOH
 end
 
+directory '/var/lib/php/session' do
+	owner 'root'
+	group 'root'
+	mode 01777
+	recursive true
+	action :create
+end
 
 web_app "web_app" do
-    docroot "/var/#{node['phpapp']['path']}/public"
+    docroot "#{node['phpapp']['home']}/public"
     template "webapp.dev.conf.erb"
     server_name "#{node['phpapp']['domain']}"
     server_aliases [node[:hostname], "#{node['phpapp']['domain']}"]
     notifies :reload, resources(:service => "apache2"), :delayed
 end
 
-execute "apachectl restart" do
-    ignore_failure true
+composer_project node['phpapp']['home'] do
+    dev false
+    quiet true
+    prefer_dist false
+    prefer_source true
+    optimize_autoloader true
+    action :install
 end

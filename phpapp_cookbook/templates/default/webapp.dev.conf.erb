@@ -1,24 +1,26 @@
-LoadModule php5_module modules/libphp5.so
-AddHandler php5-script php
+ServerTokens OS
+LoadModule php7_module modules/libphp7.so
+AddHandler php7-script php
 
 <VirtualHost *:80>
    ServerName <%= @params[:server_name] %>
    ServerAlias <% @params[:server_aliases].each do |a| %><%= "#{a}" %> <% end %>
    DocumentRoot <%= @params[:docroot] %>
 
-   <Directory <%= @params[:docroot] %>>
-     Options FollowSymLinks
-     AllowOverride All
-     Order allow,deny
-     Allow from all
+  <Directory <%= @params[:docroot] %>>
+    Options FollowSymLinks
+    Require all granted
+    SetEnv APPLICATION_ENV development
 
-     SetEnv APPLICATION_ENV development
-   </Directory>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+  </Directory>
  </VirtualHost>
 
 Alias /phpmyadmin "/opt/phpmyadmin/"
 Alias /phpMyAdmin "/opt/phpmyadmin/"
 <Directory "/opt/phpmyadmin/">
-    Order allow,deny
-    Allow from all
+  Require all granted
 </Directory>

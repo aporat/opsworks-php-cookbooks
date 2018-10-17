@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-default['phpmyadmin']['version'] = '4.7.9'
+default['phpmyadmin']['version'] = '4.8.3'
 default['phpmyadmin']['mirror'] = 'https://files.phpmyadmin.net/phpMyAdmin'
 
 default['phpmyadmin']['fpm'] = true
@@ -34,7 +34,7 @@ when 'ubuntu', 'debian'
 when 'centos', 'redhat'
 	default['phpmyadmin']['upload_dir'] = '/var/lib/php/uploads'
 	default['phpmyadmin']['save_dir'] = '/var/lib/php/uploads'
-end	
+end
 default['phpmyadmin']['maxrows'] = 100
 default['phpmyadmin']['protect_binary'] = 'blob'
 default['phpmyadmin']['default_lang'] = 'en'

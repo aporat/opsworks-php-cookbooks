@@ -1,16 +1,19 @@
 ServerTokens OS
-LoadModule php5_module modules/libphp-5.6.so
-AddHandler php5-script php
+LoadModule php7_module modules/libphp.so
+AddHandler php7-script php
 
 <VirtualHost *:80>
    ServerName <%= @params[:server_name] %>
    ServerAlias <% @params[:server_aliases].each do |a| %><%= "#{a}" %> <% end %>
    DocumentRoot <%= @params[:docroot] %>
 
-   <Directory <%= @params[:docroot] %>>
-     Options FollowSymLinks
-     AllowOverride All
-     Order allow,deny
-     Allow from all
-   </Directory>
+  <Directory <%= @params[:docroot] %>>
+    Options FollowSymLinks
+    Require all granted
+
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+  </Directory>
  </VirtualHost>

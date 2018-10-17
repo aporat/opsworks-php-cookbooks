@@ -3,7 +3,7 @@
 
 
 Vagrant.configure("2") do |config|
-  config.omnibus.chef_version = :latest
+  config.omnibus.chef_version = "12"
 
   config.vm.hostname = "webapp.dev"
 
@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 80,  host: 80
   config.vm.network :forwarded_port, guest: 443,  host: 443
 
-  config.vm.synced_folder "app", "/var/webapp/", :id => "webapp-root", :nfs => true
+  config.vm.synced_folder "app", "/var/app/", :id => "webapp-root", :nfs => true
   
   config.berkshelf.enabled = true
   config.berkshelf.berksfile_path = 'Berksfile'
@@ -29,8 +29,7 @@ Vagrant.configure("2") do |config|
           :listen => ['*:80', '*:443']
         },
         :phpapp => {
-            :domain => 'webapp.dev',
-            :path => 'webapp'
+            :domain => 'webapp.dev'
         }
       }
     
