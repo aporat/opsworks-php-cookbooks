@@ -37,6 +37,7 @@ user user do
 end
 
 directory home do
+    name 'phpmyadmin_dir'
 	owner user
 	group group
 	mode 00755
@@ -45,6 +46,7 @@ directory home do
 end
 
 directory node['phpmyadmin']['upload_dir'] do
+    name 'phpmyadmin_upload_dir'
 	owner 'root'
 	group 'root'
 	mode 01777
@@ -53,6 +55,7 @@ directory node['phpmyadmin']['upload_dir'] do
 end
 
 directory node['phpmyadmin']['save_dir'] do
+    name 'phpmyadmin_save_dir'
 	owner 'root'
 	group 'root'
 	mode 01777

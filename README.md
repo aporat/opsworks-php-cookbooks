@@ -1,8 +1,8 @@
 opsworks-php-cookbooks
 ==================================
 
-AWS OpsWorks custom layer with support for PHP 7.1 and php application deployment from a private git repository. 
-The project also contains a centos 7 virtual machine using Vagrant that emulate Amazon Linux AMI environment.
+AWS OpsWorks custom layer with support for PHP 7.4 and php application deployment from a private git repository. 
+The project also contains an Amazon Linux virtual machine using Vagrant that emulate Amazon Linux AMI environment.
 
 Please make sure to read opsworks user guide before using these cookbooks http://docs.aws.amazon.com/opsworks/latest/userguide/chef-12-linux.html
 
@@ -35,7 +35,7 @@ Stack Setup
 3. Add a new layer. 
 4. Edit the newly created layer, and add the custom chef recipes:
   * add phpapp::setup_opsworks to the setup lifetime event
-  * add phpapp::deploy_opsworks in the deploy lifetime event
+  * add phpapp::deploy_opsworks to the deploy lifetime event
 5. If your VPC is public, make sure the Automatically `Assign Public IP Address` in the layer's network settings is turned on
 5. Add an application from the "Applications" section. Make sure to enter your git deploy key
 
@@ -44,7 +44,7 @@ Vagrant Setup
 =============
 
 1. Download Vagrant 1.6+ from http://www.vagrantup.com
-2. Download latest VirtualBox from https://www.virtualbox.org
+2. Download the latest VirtualBox from https://www.virtualbox.org
 3. Install ChefDK ">= 0.6.0" https://downloads.getchef.com/chef-dk/mac/#/
 3. Install vagrant-omnibus `vagrant plugin install vagrant-omnibus`
 4. Install vagrant-berkshelf `vagrant plugin install vagrant-berkshelf`

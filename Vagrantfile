@@ -7,14 +7,14 @@ Vagrant.configure("2") do |config|
 
   config.vm.hostname = "webapp.dev"
 
-  config.vm.box = "centos/7"
+  config.vm.box = "gbailey/amzn2"
  
   config.vm.network :private_network, ip: "192.168.50.4"
   config.vm.network :forwarded_port, guest: 80,  host: 80
   config.vm.network :forwarded_port, guest: 443,  host: 443
 
-  config.vm.synced_folder "app", "/var/app/", :id => "webapp-root", :nfs => true
-  
+  config.vm.synced_folder "app", "/var/app/", :id => "webapp-root", type: "virtualbox"
+
   config.berkshelf.enabled = true
   config.berkshelf.berksfile_path = 'Berksfile'
 
