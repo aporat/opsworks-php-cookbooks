@@ -4,3 +4,4 @@
 /.project
 .DS_Store
 cookbooks.tar.gz
+/resolved-cookbooks

@@ -43,9 +43,9 @@ Stack Setup
 Vagrant Setup
 =============
 
-1. Download Vagrant 1.6+ from http://www.vagrantup.com
+1. Download Vagrant 2.2+ from http://www.vagrantup.com
 2. Download the latest VirtualBox from https://www.virtualbox.org
-3. Install ChefDK ">= 0.6.0" https://downloads.getchef.com/chef-dk/mac/#/
-3. Install vagrant-omnibus `vagrant plugin install vagrant-omnibus`
-4. Install vagrant-berkshelf `vagrant plugin install vagrant-berkshelf`
+3. Install ChefDK 4+ https://downloads.getchef.com/chef-dk/mac/#/
 4. Create a new project with the supplied `Vagrantfile` and edit `chef.cookbooks_path` to point to the cookbooks folder
+5. Run `sudo berks vendor resolved-cookbooks` to bundle the cookbooks
+6. Run `sudo vagrant up` to start the virtual machine

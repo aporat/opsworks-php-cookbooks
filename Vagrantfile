@@ -3,8 +3,6 @@
 
 
 Vagrant.configure("2") do |config|
-  config.omnibus.chef_version = "12"
-
   config.vm.hostname = "webapp.dev"
 
   config.vm.box = "gbailey/amzn2"
@@ -15,12 +13,13 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder "app", "/var/app/", :id => "webapp-root", type: "virtualbox"
 
-  config.berkshelf.enabled = true
-  config.berkshelf.berksfile_path = 'Berksfile'
-
   config.vm.provision :chef_solo do |chef|
-      chef.cookbooks_path = "."
-  
+      chef.node_name = "api"
+      chef.version = "12.18.31"
+      chef.cookbooks_path = "resolved-cookbooks"
+
+      chef.add_recipe "phpapp::setup_vagrant"
+
       chef.json = {
         :yum => {
             :exclude => 'kernel*'
@@ -32,10 +31,7 @@ Vagrant.configure("2") do |config|
             :domain => 'webapp.dev'
         }
       }
-    
-      chef.run_list = [
-        "recipe[phpapp::setup_vagrant]"
-      ]
+
   end   
      
 end
